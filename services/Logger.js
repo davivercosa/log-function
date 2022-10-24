@@ -73,7 +73,7 @@ class Logger {
     );
   }
 
-  async errorLog(directoryName, objOfTheError, endpoint, message, action) {
+  async errorLog(directoryName, endpoint, action, objOfTheError, message) {
     const filePath = await this.createLogDirectories(directoryName);
 
     if (filePath.status !== "success") {
