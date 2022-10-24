@@ -66,7 +66,34 @@ class Logger {
           dateStyle: "full",
           timeStyle: "full",
         }).format(filePath.date)}\n
-        Action -> ${action} || Status -> ${status} || EndPoint -> ${endpoint}
+        Action -> ${action} || Status -> ${status.toUpperCase()} || EndPoint -> ${endpoint}
+===========================================================================================================================
+      `,
+      () => {}
+    );
+  }
+
+  async errorLog(directoryName, objOfTheError, endpoint, message, action) {
+    const filePath = await this.createLogDirectories(directoryName);
+
+    if (filePath.status !== "success") {
+      return filePath;
+    }
+
+    fs.appendFile(
+      `${filePath.filePath}/.log`,
+      `
+===========================================================================================================================\n
+        ${new Intl.DateTimeFormat("en-US", {
+          dateStyle: "full",
+          timeStyle: "full",
+        }).format(filePath.date)}\n
+
+        Action -> ${action} || Status -> ERROR || EndPoint -> ${endpoint}
+
+        Message -> ${message}\n
+
+        ERROR -> ${JSON.stringify(objOfTheError)}\n 
 ===========================================================================================================================
       `,
       () => {}
