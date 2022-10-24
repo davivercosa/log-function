@@ -6,10 +6,11 @@ const DateFormatter = function (dateToBeFormatted) {
 
 class Logger {
   async createLogDirectories(directoryName) {
-    const date = DateFormatter(Date.now()).split("/");
+    const date = Date.now();
+    const formattedDate = DateFormatter(date);
 
     try {
-      const dates = date.split("/");
+      const dates = formattedDate.split("/");
 
       const year = dates[2];
       const day = dates[1];
@@ -48,6 +49,28 @@ class Logger {
     } catch (error) {
       return { status: "error", error, date };
     }
+  }
+
+  async infoLog(directoryName, endpoint, action, status) {
+    const filePath = await this.createLogDirectories(directoryName);
+
+    if (filePath.status !== "success") {
+      return filePath;
+    }
+
+    fs.appendFile(
+      `${filePath.filePath}/.log`,
+      `
+===========================================================================================================================
+        ${new Intl.DateTimeFormat("en-US", {
+          dateStyle: "full",
+          timeStyle: "full",
+        }).format(filePath.date)}\n
+        Action -> ${action} || Status -> ${status} || EndPoint -> ${endpoint}
+===========================================================================================================================
+      `,
+      () => {}
+    );
   }
 }
 
